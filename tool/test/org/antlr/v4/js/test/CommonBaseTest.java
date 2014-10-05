@@ -107,6 +107,8 @@ public abstract class CommonBaseTest {
 	public static final String newline = System.getProperty("line.separator");
 	public static final String pathSep = System.getProperty("path.separator");
 
+	protected static final String OS_NAME = System.getProperty("os.name").toLowerCase();
+
 	public String tmpdir = null;
 	
 	/** If error during parser execution, store stderr here; can't return
@@ -137,6 +139,61 @@ public abstract class CommonBaseTest {
     	if(dir.exists())
     		this.eraseFiles(dir);
     }
+
+	protected static boolean isMac() {
+		return OS_NAME.contains("mac");
+	}
+
+	protected static boolean isWindows() {
+		return OS_NAME.contains("win");
+	}
+
+	protected static boolean isLinux() {
+		return OS_NAME.contains("linux");
+	}
+
+	protected static boolean isX86() {
+		String sunArchDataModel = System.getProperty("sun.arch.data.model");
+		if (sunArchDataModel != null) {
+			if (sunArchDataModel.equals("32")) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+
+		if (isX64()) {
+			// handle the case of os.arch=x86_64
+			return false;
+		}
+
+		String osArch = System.getProperty("os.arch");
+		if (osArch != null && osArch.contains("x86")) {
+			return true;
+		}
+
+		return false;
+	}
+
+	protected static boolean isX64() {
+		String sunArchDataModel = System.getProperty("sun.arch.data.model");
+		if (sunArchDataModel != null) {
+			if (sunArchDataModel.equals("64")) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+
+		String osArch = System.getProperty("os.arch");
+		if (osArch != null && (osArch.contains("x86_64") || osArch.contains("amd64"))) {
+			return true;
+		}
+
+		return false;
+	}
 
     protected org.antlr.v4.Tool newTool(String[] args) {
 		Tool tool = new Tool(args);

@@ -333,63 +333,6 @@ public abstract class BaseTest extends CommonBaseTest {
 		return node;
 	}
 
-	private static final String OS_NAME = System.getProperty("os.name").toLowerCase();
-
-	private static boolean isMac() {
-		return OS_NAME.contains("mac");
-	}
-
-	private static boolean isWindows() {
-		return OS_NAME.contains("win");
-	}
-
-	private static boolean isLinux() {
-		return OS_NAME.contains("linux");
-	}
-
-	private static boolean isX86() {
-		String sunArchDataModel = System.getProperty("sun.arch.data.model");
-		if (sunArchDataModel != null) {
-			if (sunArchDataModel.equals("32")) {
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
-
-		if (isX64()) {
-			// handle the case of os.arch=x86_64
-			return false;
-		}
-
-		String osArch = System.getProperty("os.arch");
-		if (osArch != null && osArch.contains("x86")) {
-			return true;
-		}
-
-		return false;
-	}
-
-	private static boolean isX64() {
-		String sunArchDataModel = System.getProperty("sun.arch.data.model");
-		if (sunArchDataModel != null) {
-			if (sunArchDataModel.equals("64")) {
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
-
-		String osArch = System.getProperty("os.arch");
-		if (osArch != null && (osArch.contains("x86_64") || osArch.contains("amd64"))) {
-			return true;
-		}
-
-		return false;
-	}
-
 	protected void writeParserTestFile(String parserName,
 								 String lexerName,
 								 String listenerName,

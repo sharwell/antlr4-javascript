@@ -30,6 +30,7 @@
 package org.antlr.v4.js.safari.test;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeTrue;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -52,6 +53,13 @@ import org.openqa.selenium.safari.SafariDriver;
 import org.stringtemplate.v4.ST;
 
 public abstract class BaseTest extends CommonBaseTest {
+
+	@Override
+	public void setUp() throws Exception {
+		assumeTrue(isMac());
+		super.setUp();
+	}
+
 	/** Return true if all is ok, no errors */
 	@Override
 	protected ErrorQueue antlr(String fileName, String grammarFileName, String grammarStr, boolean defaultListener, String... extraOptions) {
