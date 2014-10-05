@@ -5,3 +5,6 @@
 
 .pydevproject
 /tmp-failed/
+
+# Maven build output
+/tool/target/
