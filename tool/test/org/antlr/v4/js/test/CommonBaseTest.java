@@ -286,9 +286,19 @@ public abstract class CommonBaseTest {
 	protected String locateRuntime() {
 		String propName = "antlr-javascript-runtime";
 		String prop = System.getProperty(propName);
-		if(prop==null || prop.length()==0)
-			throw new RuntimeException("Missing system property:" + propName);
-		return prop;
+		if (prop != null && !prop.isEmpty()) {
+			return prop;
+		}
+
+		String relativePath = "../src";
+		String runtime;
+		try {
+			runtime = new File(relativePath).getCanonicalPath();
+		} catch (IOException ex) {
+			throw new RuntimeException(ex);
+		}
+
+		return runtime;
 	}
 
 	public void testErrors(String[] pairs, boolean printTree) {
