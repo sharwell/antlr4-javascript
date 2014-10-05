@@ -85,7 +85,7 @@ public class TestParseErrors extends BaseTest {
 			"grammar T;\n" +
 			"a : 'a' x='b' {console.log(\"conjured=\"+$x.toString());} 'c' ;";
 		String result = execParser("T.g4", grammar, "TParser", "TLexer", "TListener", "TVisitor", "a", "ac", false);
-		String expecting = "conjured=[@-1,-1:-1='<missing 'b'>',<1>,1:1]\n";
+		String expecting = "conjured=[@-1,-1:-1='<missing 'b'>',<2>,1:1]\n";
 		assertEquals(expecting, result);
 	}
 
@@ -104,7 +104,7 @@ public class TestParseErrors extends BaseTest {
 			"grammar T;\n" +
 			"a : 'a' x=('b'|'c') {console.log(\"conjured=\"+$x.toString());} 'd' ;";
 		String result = execParser("T.g4", grammar, "TParser", "TLexer", "TListener", "TVisitor", "a", "ad", false);
-		String expecting = "conjured=[@-1,-1:-1='<missing 'b'>',<1>,1:1]\n";
+		String expecting = "conjured=[@-1,-1:-1='<missing 'b'>',<2>,1:1]\n";
 		assertEquals(expecting, result);
 	}
 
