@@ -290,9 +290,104 @@ public abstract class BaseTest extends CommonBaseTest {
 		// typically /usr/local/bin/node
 		String propName = "antlr-javascript-nodejs";
 		String prop = System.getProperty(propName);
-		if(prop==null || prop.length()==0)
-			throw new RuntimeException("Missing system property:" + propName);
-		return prop;
+		if (prop != null && !prop.isEmpty()) {
+			return prop;
+		}
+
+		String baseRelativePath = "target/test-dependency/nodejs/";
+
+		String osNameSegment;
+		if (isMac()) {
+			osNameSegment = "mac";
+		}
+		else if (isWindows()) {
+			osNameSegment = "win";
+		}
+		else if (isLinux()) {
+			osNameSegment = "linux";
+		}
+		else {
+			throw new UnsupportedOperationException("The antlr-javascript-nodejs property must be specified for the current system.");
+		}
+
+		String archSegment;
+		if (isX86()) {
+			archSegment = "x86";
+		}
+		else if (isX64()) {
+			archSegment = "x64";
+		}
+		else {
+			throw new UnsupportedOperationException("The antlr-javascript-nodejs property must be specified for the current system.");
+		}
+
+		String executable = isWindows() ? "node.exe" : "node";
+		String relativePath = baseRelativePath + osNameSegment + "-" + archSegment + "/" + executable;
+		String node;
+		try {
+			node = new File(relativePath).getCanonicalPath();
+		} catch (IOException ex) {
+			throw new RuntimeException(ex);
+		}
+
+		return node;
+	}
+
+	private static final String OS_NAME = System.getProperty("os.name").toLowerCase();
+
+	private static boolean isMac() {
+		return OS_NAME.contains("mac");
+	}
+
+	private static boolean isWindows() {
+		return OS_NAME.contains("win");
+	}
+
+	private static boolean isLinux() {
+		return OS_NAME.contains("linux");
+	}
+
+	private static boolean isX86() {
+		String sunArchDataModel = System.getProperty("sun.arch.data.model");
+		if (sunArchDataModel != null) {
+			if (sunArchDataModel.equals("32")) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+
+		if (isX64()) {
+			// handle the case of os.arch=x86_64
+			return false;
+		}
+
+		String osArch = System.getProperty("os.arch");
+		if (osArch != null && osArch.contains("x86")) {
+			return true;
+		}
+
+		return false;
+	}
+
+	private static boolean isX64() {
+		String sunArchDataModel = System.getProperty("sun.arch.data.model");
+		if (sunArchDataModel != null) {
+			if (sunArchDataModel.equals("64")) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+
+		String osArch = System.getProperty("os.arch");
+		if (osArch != null && (osArch.contains("x86_64") || osArch.contains("amd64"))) {
+			return true;
+		}
+
+		return false;
 	}
 
 	protected void writeParserTestFile(String parserName,
